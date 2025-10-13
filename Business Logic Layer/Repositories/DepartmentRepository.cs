@@ -25,21 +25,21 @@ namespace Business_Logic_Layer.Repositories
             return _context.SaveChanges();
         }
 
-        public int Add(Department department)
+        public async Task<int> AddAsync(Department department)
         {
-            _context.Departments.Add(department);
+            await _context.Departments.AddAsync(department);
             return _context.SaveChanges();
         }
 
-        public Department Get(int id)
+        public async Task<Department> GetAsync(int id)
         {
-            var dep = _context.Departments.Find(id);
+            var dep = await _context.Departments.FindAsync(id);
             return dep;
         }
 
-        public IEnumerable<Department> GetAll()
+        public async Task<IEnumerable<Department>> GetAllAsync()
         {
-             var dep =  _context.Departments.ToList();
+             var dep = await _context.Departments.ToListAsync();
             return dep;
         }
 
@@ -49,9 +49,9 @@ namespace Business_Logic_Layer.Repositories
             return _context.SaveChanges();
         }
 
-        public IEnumerable<Department> GetByName(string searchInput)
+        public async Task<IEnumerable<Department>> GetByNameAsync(string searchInput)
         {
-            var dep = _context.Departments.Where(D => D.Name.ToLower().Contains(searchInput.ToLower())).ToList();
+            var dep = await _context.Departments.Where(D => D.Name.ToLower().Contains(searchInput.ToLower())).ToListAsync();
             return dep;
         }
     }

@@ -10,19 +10,21 @@ namespace Presntation__Layer.Controllers
     public class DepartmentController : Controller
     {
         private IDepartmentRepository _departmentRepository;
+        private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
 
-        public DepartmentController(IDepartmentRepository departmentRepository , IMapper mapper)
+        public DepartmentController(/*IDepartmentRepository departmentRepository*/IUnitOfWork unitOfWork , IMapper mapper)
         {
-            _departmentRepository = departmentRepository;
+            //_departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public IActionResult Index(string? searchInput) 
+        public async Task<IActionResult> Index(string? searchInput) 
         {
-            var departments = _departmentRepository.GetAll();
+            var departments = await _unitOfWork.departmentRepository.GetAllAsync();
             if (!string.IsNullOrEmpty(searchInput))
             {
-                departments = _departmentRepository.GetByName(searchInput);
+                departments =await _unitOfWork.departmentRepository.GetByNameAsync(searchInput);
                 return View(departments);
             }
             return View(departments);
@@ -33,7 +35,7 @@ namespace Presntation__Layer.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(CreateDepartmentDTO model)
+        public async Task<IActionResult> Create(CreateDepartmentDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -44,7 +46,7 @@ namespace Presntation__Layer.Controllers
                     Location = model.Location,
                     CreatedAt = model.CreatedAt
                 };
-               var cnt = _departmentRepository.Add(department);
+               var cnt =await _unitOfWork.departmentRepository.AddAsync(department);
                 if (cnt > 0) return RedirectToAction("Index");
 
             }
@@ -52,9 +54,9 @@ namespace Presntation__Layer.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var department = _departmentRepository.Get(id);
+            var department =await _unitOfWork.departmentRepository.GetAsync(id);
             TempData["deptId"] = id;
             var model = _mapper.Map<DetailsDepartmentDTO>(department);
             if (department == null) return NotFound();
@@ -63,42 +65,42 @@ namespace Presntation__Layer.Controllers
 
         [HttpGet]
 
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
-            var department = _departmentRepository.Get(id);
+            var department =await _unitOfWork.departmentRepository.GetAsync(id);
             if (department == null) return NotFound();
             var model = _mapper.Map<UpdateDepartmentDTO>(department);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Update(int id, UpdateDepartmentDTO model)
+        public async Task<IActionResult> Update(int id, UpdateDepartmentDTO model)
         {
             if (ModelState.IsValid)
             {
-                var department = _departmentRepository.Get(id);
+                var department =await _unitOfWork.departmentRepository.GetAsync(id);
                 if (department == null) return NotFound();
                 _mapper.Map(model, department);
 
-                var cnt = _departmentRepository.Update(department);
+                var cnt = _unitOfWork.departmentRepository.Update(department);
                 if (cnt > 0) return RedirectToAction("Index");
             }
             return View(model);
         }
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var department = _departmentRepository.Get(id);
+            var department =await _unitOfWork.departmentRepository.GetAsync(id);
             if (department == null) return NotFound();
             var model = _mapper.Map<DeleteDepartmentDTO>(department);
             return View(model);
         }
         [HttpPost]
-        public IActionResult Delete(int id, DeleteDepartmentDTO model)
+        public async Task<IActionResult> Delete(int id, DeleteDepartmentDTO model)
         {
-            var department = _departmentRepository.Get(id);
+            var department =await _unitOfWork.departmentRepository.GetAsync(id);
             if (department == null) return NotFound();
-            var cnt = _departmentRepository.Delete(department);
+            var cnt = _unitOfWork.departmentRepository.Delete(department);
             if (cnt > 0) return RedirectToAction("Index");
             return View(model);
         }

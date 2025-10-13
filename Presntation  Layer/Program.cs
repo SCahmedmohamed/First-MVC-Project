@@ -1,3 +1,4 @@
+using Business_Logic_Layer;
 using Business_Logic_Layer.InterFaces;
 using Business_Logic_Layer.Repositories;
 using Data_Access_Layer.DbContexts;
@@ -14,8 +15,9 @@ namespace Presntation__Layer
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();  Will Create Auto In IUnitOfWork 
+            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();       Will Create Auto In IUnitOfWork 
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(M=> M.AddProfile(new EmployeeProfile()));
             builder.Services.AddAutoMapper(M=> M.AddProfile(new DepartmentProfile()));
             builder.Services.AddDbContext<CompanyDbcontext>(options =>

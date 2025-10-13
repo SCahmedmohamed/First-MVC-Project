@@ -10,11 +10,11 @@ namespace Business_Logic_Layer.InterFaces
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
-        IEnumerable<T> GetAll();
-        T Get(int id);
-        public IEnumerable<T> GetByName(string searchInput);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(int id);
+        Task<IEnumerable<T>> GetByNameAsync(string searchInput);
         int Update(T department);
         int Delete(T department); 
-        int Add(T department);
+        Task<int> AddAsync(T department);
     }
 }

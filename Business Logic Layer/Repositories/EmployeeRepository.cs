@@ -24,27 +24,27 @@ namespace Business_Logic_Layer.Repositories
             return _context.SaveChanges();
         } 
 
-        public IEnumerable<Employee> GetByName(string searchInput)
+        public async Task<IEnumerable<Employee>> GetByNameAsync(string searchInput)
         {
-            var emp = _context.Employees.Include(E => E.Department).Where(E => E.Name.ToLower().Contains(searchInput.ToLower())).ToList();
+            var emp = await _context.Employees.Include(E => E.Department).Where(E => E.Name.ToLower().Contains(searchInput.ToLower())).ToListAsync();
             return emp;
         }
 
-        public int Add(Employee employee)
+        public async Task<int> AddAsync(Employee employee)
         {
-            _context.Employees.Add(employee);
+            await _context.Employees.AddAsync(employee);
             return _context.SaveChanges();
         }
 
-        public Employee Get(int id)
+        public async Task<Employee> GetAsync(int id)
         {
-            var emp = _context.Employees.Include(E=>E.Department).FirstOrDefault(E=>E.Id == id);
+            var emp = await _context.Employees.Include(E=>E.Department).FirstOrDefaultAsync(E=>E.Id == id);
             return emp;
         }
 
-        public IEnumerable<Employee> GetAll()
+        public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            var emp = _context.Employees.Include(e=> e.Department).ToList();
+            var emp = await _context.Employees.Include(e=> e.Department).ToListAsync();
             return emp;
         }
 
