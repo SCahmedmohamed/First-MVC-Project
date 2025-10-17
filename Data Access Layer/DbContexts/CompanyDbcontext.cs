@@ -1,4 +1,6 @@
 ﻿using Data_Access_Layer.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Data_Access_Layer.DbContexts
 {
-    public class CompanyDbcontext : DbContext
+    public class CompanyDbcontext : IdentityDbContext
     {
         public CompanyDbcontext(DbContextOptions<CompanyDbcontext> options)
             : base(options)
@@ -18,6 +20,7 @@ namespace Data_Access_Layer.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            base.OnModelCreating(modelBuilder);
         }
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -26,6 +29,5 @@ namespace Data_Access_Layer.DbContexts
 
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
-
     }
 }
